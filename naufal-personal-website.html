@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Muhammad Naufal Fawwaz Ramadhan — Ruang Kontemplasi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F5F0E8;
+      --cream-dark:  #EDE8DC;
+      --text-dark:   #3A3530;
+      --text-mid:    #6B6258;
+      --text-soft:   #9C9289;
+      --sage:        #7A8C75;
+      --sage-light:  #A8B8A3;
+      --sage-pale:   #D8E4D4;
+      --terracotta:  #B87763;
+      --border:      rgba(106, 98, 88, 0.15);
+      --serif:       'Lora', Georgia, serif;
+      --sans:        'Montserrat', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--text-dark);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Generative portrait background using CSS + SVG */
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 40% 55%, rgba(120, 100, 80, 0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 60% at 60% 30%, rgba(168, 140, 110, 0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 100% at 20% 80%, rgba(90, 110, 85, 0.15) 0%, transparent 65%),
+        linear-gradient(160deg, #D8CEBC 0%, #C4B99E 35%, #B5A888 55%, #9A8E78 100%);
+    }
+
+    /* Soft bokeh circles */
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle 120px at 30% 25%, rgba(255,245,230,0.35) 0%, transparent 70%),
+        radial-gradient(circle 200px at 70% 65%, rgba(200,185,160,0.25) 0%, transparent 70%),
+        radial-gradient(circle 80px  at 55% 20%, rgba(255,250,240,0.20) 0%, transparent 60%),
+        radial-gradient(circle 60px  at 15% 70%, rgba(180,165,140,0.30) 0%, transparent 60%),
+        radial-gradient(circle 160px at 80% 35%, rgba(220,210,190,0.18) 0%, transparent 65%);
+    }
+
+    /* Silhouette overlay */
+    .hero-silhouette {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .hero-silhouette svg {
+      width: 55%;
+      max-width: 320px;
+      filter: blur(0.5px);
+      opacity: 0.45;
+    }
+
+    /* vignette */
+    .hero-visual .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(90,82,70,0.35) 100%);
+      z-index: 2;
+    }
+
+    /* right-edge fade into cream */
+    .hero-visual .fade-right {
+      position: absolute;
+      top: 0; right: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, var(--cream));
+      z-index: 3;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 7rem 4rem 4rem 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.3s;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--text-dark);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .hero-sub {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.9;
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.75s;
+    }
+
+    .hero-sub strong {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .hero-cta {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: color 0.3s, gap 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1s;
+    }
+
+    .hero-cta:hover { color: var(--sage); gap: 1rem; }
+
+    .hero-cta .arrow {
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+    .hero-cta:hover .arrow { transform: translateY(3px); }
+
+    /* decorative line */
+    .hero-deco-line {
+      position: absolute;
+      left: -1px; top: 15%; bottom: 15%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border) 30%, var(--border) 70%, transparent);
+    }
+
+    /* ── INTERESTS ── */
+    #interests {
+      padding: 7rem 3.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 4rem;
+      line-height: 1.2;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--text-mid);
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+
+    .pillar {
+      padding: 3rem 2.5rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: background 0.4s ease;
+    }
+
+    .pillar:last-child { border-right: none; }
+
+    .pillar:hover { background: rgba(120, 140, 117, 0.04); }
+
+    .pillar-num {
+      font-family: var(--serif);
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    .pillar-title {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 1.2rem;
+      line-height: 1.3;
+    }
+
+    .pillar-accent {
+      width: 28px;
+      height: 1px;
+      background: var(--sage-light);
+      margin-bottom: 1.4rem;
+      transition: width 0.4s ease;
+    }
+
+    .pillar:hover .pillar-accent { width: 48px; }
+
+    .pillar-text {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      line-height: 1.95;
+    }
+
+    /* ── QUOTE / INTERLUDE ── */
+    #interlude {
+      padding: 5rem 3.5rem;
+      background: var(--cream-dark);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #interlude::before {
+      content: '"';
+      position: absolute;
+      top: -1rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--serif);
+      font-size: 18rem;
+      color: rgba(122, 140, 117, 0.07);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .interlude-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-style: italic;
+      color: var(--text-mid);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.75;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      padding: 7rem 3.5rem 5rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #contact .section-label { justify-content: center; display: flex; }
+
+    .contact-title {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 1.2rem;
+      line-height: 1.3;
+    }
+
+    .contact-text {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      margin-bottom: 2.5rem;
+      line-height: 1.9;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text-soft);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 3px;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .contact-link:hover { color: var(--sage); border-color: var(--sage-light); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      letter-spacing: 0.05em;
+    }
+
+    footer .footer-name {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--text-mid);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav ul { gap: 1.5rem; }
+
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+
+      .hero-visual {
+        height: 55vw;
+        min-height: 260px;
+      }
+      .hero-visual .fade-right { display: none; }
+      .hero-visual::after {
+        background: linear-gradient(to bottom, transparent 60%, var(--cream));
+      }
+
+      .hero-text {
+        padding: 2rem 1.5rem 4rem;
+        align-items: flex-start;
+      }
+
+      .pillars { grid-template-columns: 1fr; }
+      .pillar { border-right: none; border-bottom: 1px solid var(--border); }
+      .pillar:last-child { border-bottom: none; }
+
+      #interests, #contact { padding: 4rem 1.5rem; }
+      #interlude { padding: 4rem 1.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-visual">
+      <!-- Generative CSS portrait -->
+      <div class="hero-silhouette">
+        <svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="blur-sil"><feGaussianBlur stdDeviation="3"/></filter>
+            <radialGradient id="sg" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stop-color="rgba(80,65,50,0.7)"/>
+              <stop offset="100%" stop-color="rgba(60,50,38,0.2)"/>
+            </radialGradient>
+          </defs>
+          <!-- body -->
+          <ellipse cx="100" cy="240" rx="58" ry="55" fill="url(#sg)" filter="url(#blur-sil)"/>
+          <!-- neck -->
+          <rect x="88" y="155" width="24" height="35" rx="10" fill="rgba(80,65,50,0.5)" filter="url(#blur-sil)"/>
+          <!-- head -->
+          <ellipse cx="100" cy="130" rx="42" ry="50" fill="url(#sg)" filter="url(#blur-sil)"/>
+          <!-- light glint -->
+          <ellipse cx="82" cy="108" rx="8" ry="10" fill="rgba(255,245,220,0.15)" filter="url(#blur-sil)"/>
+        </svg>
+      </div>
+      <div class="vignette"></div>
+      <div class="fade-right"></div>
+    </div>
+
+    <div class="hero-text">
+      <div class="hero-deco-line"></div>
+      <p class="hero-eyebrow">Ruang Kontemplasi</p>
+      <h1 class="hero-title">
+        Ruang<br><em>Kontemplasi.</em>
+      </h1>
+      <p class="hero-sub">
+        Selamat datang. Saya <strong>Muhammad Naufal Fawwaz Ramadhan</strong>, seorang pelajar yang bergerak di persimpangan logika data, arus kreativitas digital, dan seni merangkai kata.
+      </p>
+      <a href="#interests" class="hero-cta">
+        Pelajari apa yang saya tekuni <span class="arrow">↓</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <section id="interests">
+    <p class="section-label reveal">Sudut Pandang</p>
+    <h2 class="section-title reveal">Tiga <em>Pilar</em><br>yang Membentuk Cara Berpikir</h2>
+
+    <div class="pillars">
+
+      <div class="pillar reveal">
+        <span class="pillar-num">01</span>
+        <h3 class="pillar-title">Makroekonomi</h3>
+        <div class="pillar-accent"></div>
+        <p class="pillar-text">
+          Saya melihat dunia melalui lensa sistem yang besar. Macroeconomics bagi saya bukan sekadar angka PDB atau inflasi, melainkan narasi tentang bagaimana masyarakat berinteraksi, bagaimana kebijakan membentuk realitas, dan bagaimana keteraturan logis dapat ditemukan dalam kompleksitas global.
+        </p>
+      </div>
+
+      <div class="pillar reveal">
+        <span class="pillar-num">02</span>
+        <h3 class="pillar-title">Vibe Coding</h3>
+        <div class="pillar-accent"></div>
+        <p class="pillar-text">
+          Bagi saya, menulis kode adalah sebuah estetika. Dalam Vibe Coding, fokus saya bukan pada sintaksis kaku yang melelahkan, melainkan pada flow kreativitas. Ini adalah proses intuitif di mana logika pemrograman bertemu dengan ritme kenyamanan, membangun fungsionalitas melalui perasaan dan intuisi desainer.
+        </p>
+      </div>
+
+      <div class="pillar reveal">
+        <span class="pillar-num">03</span>
+        <h3 class="pillar-title">Copywriting</h3>
+        <div class="pillar-accent"></div>
+        <p class="pillar-text">
+          Kata-kata adalah jembatan. Melalui Copywriting, saya menyuling ide-ide rumit dari ekonomi dan teknologi menjadi bahasa yang manusiawi, jernih, dan memikat. Sentuhan akhir yang memastikan struktur logika dan aliran kode dapat dimengerti dan dirasakan oleh pembaca.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INTERLUDE / QUOTE -->
+  <section id="interlude">
+    <p class="interlude-quote reveal">
+      "Di antara angka-angka ekonomi, baris-baris kode, dan untaian kata — saya sedang belajar menemukan bahasa yang menyatukan ketiganya."
+    </p>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label reveal">Sambungan</p>
+    <h2 class="contact-title reveal">Mari Berdiskusi</h2>
+    <p class="contact-text reveal">
+      Ingin berdiskusi tentang dinamika ekonomi, bertukar ide tentang coding flow, atau sekadar menyapa?
+    </p>
+    <div class="contact-links reveal">
+      <a href="https://www.instagram.com/frmdhannnn_?igsh=Y2tlbHlobzBuNGRj" class="contact-link" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 <span class="footer-name">Muhammad Naufal Fawwaz Ramadhan</span></p>
+    <p>Dipersembahkan dengan tenang.</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
